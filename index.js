@@ -1,19 +1,22 @@
-const express = require('express')
-const Gpio = require('onoff').Gpio
-const LED = new Gpio(4, 'out')
-const app = express()
+const lampOn = document.querySelector('button.lampOn')
+const lampOff = document.querySelector('button.lampOff')
 
-app.get('/on', function (req, res) {
-  LED.writeSync(1)
-  res.sendStatus(200)
+const IP = '192.168.0.152'
+const PORT = 3000
+
+lampOn.addEventListener('click', () => {
+  getReq(`http://${IP}:${PORT}/on`)
 })
 
-app.get('/off', function (req, res) {
-  LED.writeSync(0)
-  res.sendStatus(200)
+lampOff.addEventListener('click', () => {
+  getReq(`http://${IP}:${PORT}/off`)
 })
 
-app.get('/blink', function (req, res) {})
+const getReq = (url) => {
+  let xmlHttp = new XMLHttpRequest()
 
-app.listen(3000)
-console.log('Server running on port 3000')
+  xmlHttp.open('GET', url, false)
+  xmlHttp.send(null)
+
+  return xmlHttp.responseText
+}
